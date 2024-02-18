@@ -17,13 +17,15 @@ static float y = 0;
 // const char* SSID = "UofT";
 // const char* PWD = "PWD";
 
-
 float phi;
 float theta;
 
-int d = 4;
-int h = 1;
-int a = 1;
+float phi_live;
+float theta_live;
+
+int d = 50;
+int h = 100;
+int a = 100;
 float pi = 3.14159265358979;
 
 Servo azimuth;
@@ -53,12 +55,10 @@ void handleXY() {
   Serial.printf("x: %3f, y: %3f\n", x, y);
   server.send(200, "application/json", "{}");
 
-  phi = (atan(x/d) + pi/2)*180/pi;
-  theta = (atan((y-h)/d) + pi/4)*180/pi;
+  phi = (atan(x/d))*180/pi;
+  theta = (atan(y/d))*180/pi;
   Serial.println(phi);
   Serial.println(theta);
-  azimuth.write(map(phi, 0, 180, 0, 180));
-  zenith.write(map(theta, 0, 180, 0, 180));
 }
 
 void setup() {
@@ -88,5 +88,12 @@ void setup() {
 }
 
 void loop() {
+  delay(1);
+  phi_live = phi_live + (phi - phi_live)/40;
+  theta_live = theta_live + (theta - theta_live)/40;
+
+  azimuth.write(map(phi_live, 0, 180, 0, 180));
+  zenith.write(map(theta_live, 0, 180, 0, 180));
+
   server.handleClient();
 }
