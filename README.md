@@ -1,0 +1,1 @@
+connect to ESP32, note down its IP address, put the IP into webTest.py in the URL variable, make wifipass.h and #define the username and password, run the python on a computer w/ webcam and load + power the esp board. data will be transferred to the rest api hosted by the esp.
